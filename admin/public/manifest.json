@@ -1,6 +1,6 @@
 {
-  "short_name": "test",
-  "name": "test",
+  "short_name": "My sample app",
+  "name": "My sample app",
   "icons": [
     {
       "src": "favicon.ico",
