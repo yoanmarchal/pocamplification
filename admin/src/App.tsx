@@ -15,6 +15,8 @@ import BreadcrumbsProvider from "./components/breadcrumbs/BreadcrumbsProvider";
 import useBreadcrumbs from "./components/breadcrumbs/use-breadcrumbs";
 import PrivateRoute from "./components/PrivateRoute";
 import { UserIndex } from "./user/UserIndex";
+import { ProjectIndex } from "./project/ProjectIndex";
+import { TaskIndex } from "./task/TaskIndex";
 
 const App = (): React.ReactElement => {
   const history = useHistory();
@@ -43,7 +45,7 @@ export default App;
 /**@todo: move to a separate template file */
 const AppLayout = (): React.ReactElement => {
   const history = useHistory();
-  useBreadcrumbs("/", "test");
+  useBreadcrumbs("/", "My sample app");
   const breadcrumbsContext = useContext(BreadcrumbsContext);
 
   const signOut = useCallback(() => {
@@ -62,7 +64,7 @@ const AppLayout = (): React.ReactElement => {
         onSignOutClick={signOut}
         logoContent={
           <Link to="/">
-            <CircleBadge name={"test"} />
+            <CircleBadge name={"My sample app"} />
           </Link>
         }
       ></Menu>
@@ -84,6 +86,8 @@ const AppLayout = (): React.ReactElement => {
           <Switch>
             <PrivateRoute exact path="/" component={Navigation} />
             <PrivateRoute path="/users" component={UserIndex} />
+            <PrivateRoute path="/projects" component={ProjectIndex} />
+            <PrivateRoute path="/tasks" component={TaskIndex} />
           </Switch>
         </Page>
       </MainLayout.Content>

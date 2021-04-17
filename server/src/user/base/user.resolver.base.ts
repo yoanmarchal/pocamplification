@@ -13,6 +13,10 @@ import { DeleteUserArgs } from "./DeleteUserArgs";
 import { UserFindManyArgs } from "./UserFindManyArgs";
 import { UserFindUniqueArgs } from "./UserFindUniqueArgs";
 import { User } from "./User";
+import { ProjectFindManyArgs } from "../../project/base/ProjectFindManyArgs";
+import { Project } from "../../project/base/Project";
+import { TaskFindManyArgs } from "../../task/base/TaskFindManyArgs";
+import { Task } from "../../task/base/Task";
 import { UserService } from "../user.service";
 
 @graphql.Resolver(() => User)
@@ -169,5 +173,47 @@ export class UserResolverBase {
       }
       throw error;
     }
+  }
+
+  @graphql.ResolveField(() => [Project])
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "read",
+    possession: "any",
+  })
+  async project(
+    @graphql.Parent() parent: User,
+    @graphql.Args() args: ProjectFindManyArgs,
+    @gqlUserRoles.UserRoles() userRoles: string[]
+  ): Promise<Project[]> {
+    const permission = this.rolesBuilder.permission({
+      role: userRoles,
+      action: "read",
+      possession: "any",
+      resource: "Project",
+    });
+    const results = await this.service.findProject(parent.id, args);
+    return results.map((result) => permission.filter(result));
+  }
+
+  @graphql.ResolveField(() => [Task])
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "read",
+    possession: "any",
+  })
+  async tasks(
+    @graphql.Parent() parent: User,
+    @graphql.Args() args: TaskFindManyArgs,
+    @gqlUserRoles.UserRoles() userRoles: string[]
+  ): Promise<Task[]> {
+    const permission = this.rolesBuilder.permission({
+      role: userRoles,
+      action: "read",
+      possession: "any",
+      resource: "Task",
+    });
+    const results = await this.service.findTasks(parent.id, args);
+    return results.map((result) => permission.filter(result));
   }
 }
